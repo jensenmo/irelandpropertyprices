@@ -1,5 +1,5 @@
 ﻿
--- curl 'https://www.propertypriceregister.ie/website/npsra/ppr/npsra-ppr.nsf/Downloads/PPR-2015.csv/$FILE/PPR-2015.csv' >PPR-2015.csv
+-- curl 'https://www.propertypriceregister.ie/website/npsra/ppr/npsra-ppr.nsf/Downloads/PPR-2016.csv/$FILE/PPR-2016.csv' >PPR-2016.csv
 
 # PostgreSQL
 
@@ -11,9 +11,15 @@ psql
 #list databases
 \l
 
+
 # Connect to database
 \connect PPR
 
+# list tables
+\dt
+
+# describe table
+\d+ PPR_FULL
 
 create table PPR_IMP (
   dateOfSale VARCHAR(16),
@@ -191,6 +197,13 @@ select
  order by dateofsale, address
 ) to '/home/mjensen/development/git/irelandpropertyprices/ppri_data/PPR_CLEAN.csv' DELIMITER ',' CSV;
 
+
+# Amazon ML: Export of cleaned up data set
+copy (
+select dateofsale,county,price,notfullmarketprice,vatexclusive,description,propertysize
+     from ppr_full
+ order by dateofsale, address
+) to '/home/mjensen/development/git/irelandpropertyprices/ppri_data/PPR_CLEAN_AML.csv' DELIMITER ',' CSV;
 
 
 
